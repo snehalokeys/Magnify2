@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Magnify</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .magnified-text {
+      font-size: 3rem;
+      color: #000;
+    }
+    .hidden {
+      display: none;
+    }
+    .moon {
+      display: none;
+      color: yellow;
+      font-size: 1.5rem;
+    }
+    .sun {
+      color: yellow;
+      font-size: 1.5rem;
+    }
+  </style>
+</head>
+<body class="bg-white text-black">
+  <div class="flex justify-between p-4">
+    <h1 class="text-4xl">Magnify</h1>
+    <button id="theme-toggle" class="bg-gray-300 p-2 rounded-full">
+      <span id="theme-icon" class="sun">🌞</span>
+    </button>
+  </div>
+
+  <div class="p-6">
+    <input type="text" id="magnifyInput" placeholder="Type here to magnify text..." class="p-2 w-full border rounded">
+    <div id="magnifiedText" class="magnified-text hidden mt-4"></div>
+  </div>
+
+  <script>
+    // Theme toggle functionality
+    const themeToggleButton = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+    const body = document.body;
+
+    themeToggleButton.addEventListener('click', () => {
+      const isDark = body.classList.contains('bg-black');
+      if (isDark) {
+        body.classList.remove('bg-black', 'text-white');
+        body.classList.add('bg-white', 'text-black');
+        themeIcon.textContent = '🌞';  // Sun icon for light theme
+      } else {
+        body.classList.remove('bg-white', 'text-black');
+        body.classList.add('bg-black', 'text-white');
+        themeIcon.textContent = '🌙';  // Moon icon for dark theme
+      }
+    });
+
+    // Magnify text functionality
+    const magnifyInput = document.getElementById('magnifyInput');
+    const magnifiedText = document.getElementById('magnifiedText');
+
+    magnifyInput.addEventListener('input', () => {
+      if (magnifyInput.value.trim()) {
+        magnifiedText.textContent = magnifyInput.value;
+        magnifiedText.classList.remove('hidden');
+      } else {
+        magnifiedText.classList.add('hidden');
+      }
+    });
+  </script>
+</body>
+</html>

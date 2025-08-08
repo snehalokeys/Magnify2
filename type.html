@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Magnify</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F7F5F2;
+      --text: #222;
+      --accent: #C0A062;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      height: 100%;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 2rem;
+      text-align: center;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+    input[type="text"] {
+      font-size: 1.2rem;
+      padding: 0.5rem 1rem;
+      width: 100%;
+      max-width: 400px;
+      border: 2px solid var(--accent);
+      border-radius: 6px;
+      outline: none;
+    }
+
+    /* Fullscreen magnified text */
+    #magnifier {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: var(--bg);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      font-size: clamp(2rem, 10vw, 8rem);
+      padding: 2rem;
+      text-align: center;
+      word-wrap: break-word;
+    }
+
+    #magnifier.active {
+      display: flex;
+    }
+
+    .hint {
+      margin-top: 1.2rem;
+      font-size: 0.9rem;
+      color: #555;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Magnify</h1>
+  <input type="text" id="inputText" placeholder="Type here to magnify..." autofocus />
+  <div class="hint">Your text will appear in fullscreen as you type. Press ESC to exit.</div>
+
+  <div id="magnifier"><span id="magnifiedText"></span></div>
+
+  <script>
+    const input = document.getElementById('inputText');
+    const magnifier = document.getElementById('magnifier');
+    const magnifiedText = document.getElementById('magnifiedText');
+
+    input.addEventListener('input', () => {
+      const value = input.value.trim();
+      if (value) {
+        magnifiedText.textContent = value;
+        magnifier.classList.add('active');
+      } else {
+        magnifier.classList.remove('active');
+      }
+    });
+
+    // Escape key hides magnifier and clears input
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        magnifier.classList.remove('active');
+        input.value = '';
+      }
+    });
+  </script>
+
+</body>
+</html>
