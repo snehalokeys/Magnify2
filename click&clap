@@ -1,221 +1,149 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Appreciation</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minimal Appreciation</title>
 
-<!-- Fonts (external; still single-file deployable) -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700&display=swap" rel="stylesheet">
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
-  :root{
-    --bg:#F7F5F2;
-    --text:#222222;
-    --accent:#C0A062;
-  }
-  /* Reset & base */
-  html,body{height:100%}
-  *{box-sizing:border-box}
-  body{
-    margin:0;
-    background:var(--bg);
-    color:var(--text);
-    font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-    line-height:1.6;
-  }
+:root {
+  --bg: #F7F5F2;
+  --text: #222;
+  --accent: #C0A062;
+}
 
-  /* Centered single-column layout with 60-character measure */
-  .wrap{
-    min-height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:6vh 20px;
-  }
-  .card{
-    max-width:60ch; /* 60-character measure */
-    width:100%;
-    text-align:center;
-    margin:0 auto;
-    padding:clamp(24px,6vh,56px);
-  }
+/* Reset */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
 
-  h1{
-    margin:0 0 .5rem;
-    font-family:"Playfair Display", serif;
-    font-weight:400;
-    letter-spacing:-0.02em;
-    font-size:clamp(28px,4vw,40px);
-    color:var(--text);
-  }
-  p.lead{
-    margin:0 0 1.2rem;
-    color:var(--text);
-    opacity:.85;
-    font-size:1rem;
-  }
-  .hint{
-    color:var(--text);
-    opacity:.6;
-    font-size:.9rem;
-    margin-top:1.25rem;
-  }
+/* Body styling */
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+}
 
-  /* Ripple micro-feedback */
-  .ripple{
-    position:fixed;
-    pointer-events:none;
-    width:8px; height:8px;
-    border-radius:4px; /* 4px radius as requested */
-    transform:translate(-50%,-50%) scale(1);
-    background:var(--accent);
-    opacity:.9;
-    will-change:transform,opacity;
-    transition:transform 150ms ease-out, opacity 150ms linear;
-    z-index:9000;
-  }
+/* Content container */
+.container {
+  max-width: 60ch;
+}
 
-  /* Appreciation overlay */
-  .appr{
-    position:fixed;
-    inset:0;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    pointer-events:none;
-    z-index:9999;
-  }
-  .appr .text{
-    font-family:"Playfair Display", serif;
-    font-weight:400;
-    color:var(--accent);
-    /* 72pt = 96px; make responsive but honor 96px as max */
-    font-size:clamp(36px, 12vw, 96px);
-    line-height:1;
-    opacity:0;
-    transform:translateY(6px);
-  }
+/* Heading & paragraph */
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  margin-bottom: 0.5rem;
+}
+p {
+  opacity: 0.85;
+  line-height: 1.6;
+}
 
-  /* Fade-in 1s then fade-out 1s (total 2s) */
-  @keyframes apprFade {
-    0%   {opacity:0; transform:translateY(6px) scale(0.98)}
-    50%  {opacity:1; transform:translateY(0) scale(1)}
-    100% {opacity:0; transform:translateY(-6px) scale(0.98)}
-  }
-  .appr.show .text{
-    animation:apprFade 2s cubic-bezier(.22,.9,.28,1) forwards;
-  }
+/* Ripple effect */
+.ripple {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 4px;
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 0.9;
+  pointer-events: none;
+  transition: transform 150ms ease-out, opacity 150ms linear;
+  z-index: 10;
+}
 
-  /* Ensure responsiveness to 360px */
-  @media (max-width:420px){
-    .card{ padding:20px; }
-  }
+/* Appreciation overlay */
+#appreciation {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 20;
+}
+#appreciation span {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 8vw, 4.5rem);
+  color: var(--accent);
+  opacity: 0;
+}
+
+/* Animation */
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateY(6px) scale(0.98); }
+  50% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-6px) scale(0.98); }
+}
+.show span {
+  animation: fadeInOut 2s ease forwards;
+}
 </style>
 </head>
 <body>
-  <main class="wrap" id="wrap">
-    <div class="card" aria-live="polite">
-      <h1>Minimal Gratitude</h1>
-      <p class="lead">A quiet page. Click anywhere — earn a small appreciation if you click 10 times rapidly.</p>
-      <div class="hint">Soft palette • Playfair &amp; Inter • No sound • Try it — 10 clicks within 2 seconds.</div>
-    </div>
-  </main>
 
-  <!-- Appreciation element (kept in DOM for perf) -->
-  <div class="appr" id="appr" aria-hidden="true">
-    <div class="text" id="apprText">Appreciated.</div>
-  </div>
+<div class="container">
+  <h1>Minimal Gratitude</h1>
+  <p>Click anywhere — 10 times within 2 seconds — to reveal a quiet thank-you.</p>
+</div>
+
+<div id="appreciation"><span>Appreciated.</span></div>
 
 <script>
 (function(){
-  const WINDOW_MS = 2000;    // rolling 2-second window
-  const REQUIRED = 10;       // number of clicks required
-  let times = [];            // timestamps of recent clicks
-  let playing = false;       // is appreciation anim playing
+  const REQUIRED = 10;
+  const WINDOW = 2000; // 2 seconds
+  let clicks = [];
+  let showing = false;
+  const appreciation = document.getElementById('appreciation');
 
-  const body = document.documentElement;
-  const appr = document.getElementById('appr');
-  const apprText = document.getElementById('apprText');
-
-  // create small ripple at click point
-  function makeRipple(x,y){
-    const r = document.createElement('span');
+  // Ripple creation
+  function createRipple(x, y) {
+    const r = document.createElement('div');
     r.className = 'ripple';
-    // account for scroll offsets
-    const left = x + window.scrollX;
-    const top  = y + window.scrollY;
-    r.style.left = left + 'px';
-    r.style.top  = top  + 'px';
+    r.style.left = x + 'px';
+    r.style.top = y + 'px';
     document.body.appendChild(r);
-
-    // slight scale for a tactile feel
-    requestAnimationFrame(()=> {
-      r.style.transform = 'translate(-50%,-50%) scale(2)';
+    requestAnimationFrame(() => {
+      r.style.transform = 'translate(-50%, -50%) scale(2)';
       r.style.opacity = '0';
     });
-
-    // remove after 160ms to be safe
-    setTimeout(()=> r.remove(), 160);
+    setTimeout(() => r.remove(), 160);
   }
 
-  // On trigger: show appreciation, reset state
-  function triggerAppreciation(){
-    if(playing) return;
-    playing = true;
-    // clear timestamps so user can earn again after the animation
-    times = [];
-    appr.classList.add('show');
-    // after 2s (animation end) hide and allow again
-    setTimeout(()=> {
-      appr.classList.remove('show');
-      playing = false;
+  // Show appreciation
+  function showAppreciation() {
+    if (showing) return;
+    showing = true;
+    appreciation.classList.add('show');
+    setTimeout(() => {
+      appreciation.classList.remove('show');
+      showing = false;
     }, 2000);
+    clicks = [];
   }
 
-  // global click handler
-  function onClick(e){
-    // micro-feedback ripple (no pointer events)
-    makeRipple(e.clientX, e.clientY);
-
+  // Click listener
+  document.addEventListener('click', e => {
+    createRipple(e.clientX, e.clientY);
     const now = Date.now();
-    times.push(now);
-    // keep only entries within rolling WINDOW_MS
-    const cutoff = now - WINDOW_MS;
-    times = times.filter(ts => ts >= cutoff);
-
-    if(times.length >= REQUIRED){
-      triggerAppreciation();
+    clicks.push(now);
+    clicks = clicks.filter(ts => ts > now - WINDOW);
+    if (clicks.length >= REQUIRED) {
+      showAppreciation();
     }
-  }
-
-  // attach handler to entire document
-  document.addEventListener('click', onClick, {passive:true});
-
-  // Small accessibility: allow keyboard activation via Enter/Space on body
-  document.addEventListener('keydown', function(e){
-    if(e.code === 'Enter' || e.code === 'Space'){
-      // emulate a click at center, but still count as a click for the game
-      // center coords approximate for ripple
-      const cx = window.innerWidth/2;
-      const cy = window.innerHeight/2;
-      makeRipple(cx,cy);
-      const now = Date.now();
-      times.push(now);
-      const cutoff = now - WINDOW_MS;
-      times = times.filter(ts => ts >= cutoff);
-      if(times.length >= REQUIRED){
-        triggerAppreciation();
-      }
-      // prevent scrolling on space
-      if(e.code === 'Space') e.preventDefault();
-    }
-  }, {passive:false});
-
-  // Prevent console noise in some environments by not exposing globals
+  });
 })();
 </script>
+
 </body>
 </html>

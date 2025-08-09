@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Tap Challenge</title>
+<style>
+  body {
+    font-family: sans-serif;
+    text-align: center;
+    margin-top: 50px;
+  }
+  button {
+    padding: 10px 20px;
+    font-size: 18px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Tap 10 times within 2 seconds!</h1>
+<p id="status">Taps: 0</p>
+<button id="tapButton">Tap</button>
+
+<script>
+let tapCount = 0;
+let startTime = null;
+let timerRunning = false;
+const tapGoal = 10; // required taps
+
+function handleTap() {
+    const now = Date.now();
+
+    // Start timer on first tap
+    if (!timerRunning) {
+        startTime = now;
+        timerRunning = true;
+        tapCount = 0;
+
+        // Automatically end after 2 seconds
+        setTimeout(() => {
+            if (tapCount >= tapGoal) {
+                alert("🎉 Congratulations! You did it!");
+            } else {
+                alert("❌ Try Again!");
+            }
+            document.getElementById("status").textContent = `Taps: ${tapCount}`;
+            timerRunning = false;
+        }, 2000);
+    }
+
+    // Count taps only if within 2 seconds
+    if (now - startTime <= 2000) {
+        tapCount++;
+        document.getElementById("status").textContent = `Taps: ${tapCount}`;
+    }
+}
+
+document.getElementById("tapButton").addEventListener("click", handleTap);
+
+// Listen for any key press
+document.addEventListener("keydown", handleTap);
+</script>
+
+</body>
+</html>

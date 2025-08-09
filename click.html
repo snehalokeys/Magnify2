@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Tap Challenge</title>
+<style>
+  body {
+    font-family: sans-serif;
+    text-align: center;
+    margin-top: 50px;
+  }
+  #letterCount {
+    margin-top: 20px;
+    font-size: 18px;
+  }
+  #textInput {
+    padding: 8px;
+    font-size: 16px;
+    width: 60%;
+    max-width: 400px;
+    margin-top: 20px;
+  }
+  /* Jump animation for heading */
+  @keyframes jump {
+    0%   { transform: translateY(0); }
+    20%  { transform: translateY(-20px); }
+    40%  { transform: translateY(0); }
+    60%  { transform: translateY(-12px); }
+    80%  { transform: translateY(0); }
+    100% { transform: translateY(0); }
+  }
+  .jumping {
+    display: inline-block;
+    animation: jump 1.2s infinite;
+  }
+
+  /* Popper styles */
+  .popper {
+    position: fixed;
+    top: 30%;
+    width: 80px;
+    height: 80px;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0.95;
+    animation: popper-pop 1.2s forwards;
+  }
+  .popper-left {
+    left: 0;
+    transform: rotate(-20deg);
+  }
+  .popper-right {
+    right: 0;
+    transform: rotate(20deg) scaleX(-1);
+  }
+  @keyframes popper-pop {
+    0%   { opacity: 0; transform: translateY(40px) scale(0.5);}
+    30%  { opacity: 1; transform: translateY(-10px) scale(1.1);}
+    60%  { opacity: 1; }
+    100% { opacity: 0; transform: translateY(-120px) scale(0.7);}
+  }
+</style>
+</head>
+<body>
+
+<h1 class="jumping">Tap 10 times within 2 seconds!</h1>
+<p id="status">Taps: 0</p>
+
+<input type="text" id="textInput" placeholder="Type here..." />
+<p id="letterCount">Letters typed: 0</p>
+
+<!-- Popper SVGs will be injected here -->
+
+<script>
+let tapCount = 0;
+let startTime = null;
+let timerRunning = false;
+const tapGoal = 10; // required taps
+let lastKey = null;
+let lastKeyTime = 0;
+
+function showPoppers() {
+    // Simple SVG popper (party popper emoji style)
+    const popperSVG = `
+      <svg width="80" height="80" viewBox="0 0 80 80">
+        <g>
+          <polygon points="10,70 70,10 40,80" fill="#FFD93B" stroke="#F4B400" stroke-width="3"/>
+          <circle cx="60" cy="20" r="7" fill="#EA4335"/>
+          <circle cx="20" cy="60" r="6" fill="#34A853"/>
+          <circle cx="50" cy="60" r="5" fill="#4285F4"/>
+          <circle cx="30" cy="30" r="4" fill="#FBBC05"/>
+        </g>
+      </svg>
+    `;
+
+    // Create left popper
+    const leftPopper = document.createElement('div');
+    leftPopper.className = 'popper popper-left';
+    leftPopper.innerHTML = popperSVG;
+    document.body.appendChild(leftPopper);
+
+    // Create right popper
+    const rightPopper = document.createElement('div');
+    rightPopper.className = 'popper popper-right';
+    rightPopper.innerHTML = popperSVG;
+    document.body.appendChild(rightPopper);
+
+    // Remove poppers after animation
+    setTimeout(() => {
+      leftPopper.remove();
+      rightPopper.remove();
+    }, 1200);
+}
+
+function resetTapCounter() {
+    tapCount = 0;
+    document.getElementById("status").textContent = `Taps: 0`;
+    // Clear the text input and letter count, and focus at the beginning
+    const textInput = document.getElementById("textInput");
+    textInput.value = "";
+    document.getElementById("letterCount").textContent = "Letters typed: 0";
+    textInput.focus();
+    textInput.setSelectionRange(0, 0);
+}
+
+function handleTap(event) {
+    // For keyboard: ignore if same key as last and pressed within 100ms (prevents holding)
+    if (event.type === "keydown") {
+        if (event.repeat) return; // Ignore auto-repeat
+        if (lastKey === event.code && Date.now() - lastKeyTime < 150) return;
+        lastKey = event.code;
+        lastKeyTime = Date.now();
+    } else {
+        lastKey = null;
+    }
+
+    const now = Date.now();
+
+    // Start timer on first tap
+    if (!timerRunning) {
+        startTime = now;
+        timerRunning = true;
+        tapCount = 0;
+
+        setTimeout(() => {
+            if (tapCount >= tapGoal) {
+                showPoppers();
+                setTimeout(() => {
+                  alert("🎉 Congratulations! You did it!");
+                }, 400);
+            } else {
+                alert("❌ Try Again!");
+            }
+            resetTapCounter();
+            timerRunning = false;
+        }, 2000);
+    }
+
+    // Count taps only if within 2 seconds
+    if (now - startTime <= 2000) {
+        tapCount++;
+        document.getElementById("status").textContent = `Taps: ${tapCount}`;
+    }
+}
+
+// Respond to any mouse click or keyboard key
+document.addEventListener("click", handleTap);
+document.addEventListener("keydown", handleTap);
+
+// Letter count functionality
+const textInput = document.getElementById("textInput");
+const letterCount = document.getElementById("letterCount");
+
+textInput.addEventListener("input", () => {
+    letterCount.textContent = `Letters typed: ${textInput.value.length}`;
+});
+</script>
+
+</body>
+</html>
